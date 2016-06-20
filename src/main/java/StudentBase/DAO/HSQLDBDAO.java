@@ -11,9 +11,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by gres on 18.06.2016.
- */
+
 public class HSQLDBDAO implements DaoFactory {
 
     public static boolean firstRun = true;

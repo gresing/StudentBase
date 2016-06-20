@@ -30,7 +30,7 @@ public class StartUI extends UI {
 
         StudentUI studentUI = new StudentUI("Управление студентами");
         GroupUI groupUI = new GroupUI("Управление группами");
-
+        ts.setSizeFull();
         ts.addSelectedTabChangeListener(selectedTabChangeEvent -> { // переделать в eventfire?
             studentUI.refreshGrid();
             groupUI.refreshGrid();
@@ -38,10 +38,11 @@ public class StartUI extends UI {
         ts.addComponents(groupUI, studentUI);
 
         VerticalLayout vl = new VerticalLayout();
-
+        vl.setSizeFull();
 
         vl.addComponent(ts);
         setContent(vl);
+        setSizeFull();
 
     }
 

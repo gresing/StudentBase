@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -29,14 +30,18 @@ public class StudentUI extends CustomComponent {
     private Student selectedStudent;
 
     private IndexedContainer container;
+
     private Grid grid;
     private Button addNewStudent;
     private Button deleteStudent;
     private Button editButton;
+    List<TextField> filterFields;
 
 
     public StudentUI(String caption) {
         this.caption = caption;
+
+        filterFields = new ArrayList<>();
 
         df = new HSQLDBDAO();
         initContainer();
@@ -48,10 +53,12 @@ public class StudentUI extends CustomComponent {
         setDisabledEditAndDeleteButtons();
 
         grid = new Grid();
+
         refreshGrid();
         addFilter();
+
         grid.removeColumn("ID");
-        grid.setWidth(100F, Unit.PERCENTAGE);
+        grid.setSizeFull();
 
         addNewStudent.addClickListener(clickEvent ->
         {
@@ -92,11 +99,14 @@ public class StudentUI extends CustomComponent {
         });
 
 
-        VerticalLayout verticalLayout = new VerticalLayout(addNewStudent, editButton, deleteStudent);
-        verticalLayout.setSpacing(true);
-        HorizontalLayout wholeLayout = new HorizontalLayout(grid, verticalLayout);
+        HorizontalLayout buttonsLayout = new HorizontalLayout(addNewStudent, editButton, deleteStudent);
+        buttonsLayout.setSpacing(true);
+        buttonsLayout.setSizeUndefined();
+
+        VerticalLayout wholeLayout = new VerticalLayout(buttonsLayout, grid);
+        wholeLayout.setSizeFull();
         wholeLayout.setSpacing(true);
-        wholeLayout.setWidth(100F, Unit.PERCENTAGE);
+        wholeLayout.setSizeFull();
         setCompositionRoot(wholeLayout);
     }
 
@@ -136,6 +146,9 @@ public class StudentUI extends CustomComponent {
                 }
             }
             container.removeAllContainerFilters();
+            for (TextField tf : filterFields) {
+                tf.setValue("");
+            }
             container.getContainerProperty(itemId, "Фамилия").setValue(st.getSurname());
             container.getContainerProperty(itemId, "Имя").setValue(st.getName());
             container.getContainerProperty(itemId, "Отчество").setValue(st.getPatronymic());
@@ -168,12 +181,14 @@ public class StudentUI extends CustomComponent {
     }
 
     private void addFilter() {
+        filterFields.clear();
         HeaderRow filterRow = grid.appendHeaderRow();
         grid.getContainerDataSource()
                 .getContainerPropertyIds().stream().filter(pid -> pid.equals("Фамилия") || pid.equals("Номер группы")).forEach(pid -> {
 
             Grid.HeaderCell cell = filterRow.getCell(pid);
             TextField filterField = new TextField();
+            filterFields.add(filterField);
             filterField.addStyleName(ValoTheme.TEXTFIELD_TINY);
             filterField.setInputPrompt("Фильтр");
             filterField.addTextChangeListener(change -> {

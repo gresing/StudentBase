@@ -8,7 +8,7 @@ import com.vaadin.data.Validator;
 public class ValidatorNotNull implements Validator {
     @Override
     public void validate(Object o) throws InvalidValueException {
-        if (o == null) {
+        if (o == null || o.toString().trim().equals("")) {
             throw new InvalidValueException("Значение не может быть нулевым");
         }
     }

@@ -47,6 +47,8 @@ class EditStudentModalWindow extends Window {
         groupNumber.addValidator(new ValidatorNotNull());
 
 
+
+
         groupNumber.setNullSelectionAllowed(false);
         groupNumber.setNewItemsAllowed(false);
         groupNumber.setTextInputAllowed(false);
@@ -69,6 +71,7 @@ class EditStudentModalWindow extends Window {
             try {
                 name.validate();
                 surName.validate();
+                System.out.println(patronymic.getValue());
                 patronymic.validate();
                 groupNumber.validate();
                 birthDay.validate();
